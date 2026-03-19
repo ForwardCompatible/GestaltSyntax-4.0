@@ -91,6 +91,8 @@ The following tests are currently planned or in progress:
 
 Additional test areas are being designed. Community contributions are welcome — if you have run your own tests using Gestalt, or have suggestions for experiments worth pursuing, please open an issue or submit your results. All findings, positive or negative, are useful.
 
+**Note about GSM8k** — GSM8K tests deterministic numerical reasoning — problems with single correct answers that require no relationship traversal. This measures a different capability than what Gestalt is designed to support. Gestalt encodes explicit relationships between concepts and is better evaluated against a format where making these relationships explicit doesn't "pre-solve" the question. Due to this, SQuAD testing is planned as that appears to represent the more appropriate instrument.
+
 ---
 
 ## License
