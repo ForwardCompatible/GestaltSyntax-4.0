@@ -64,6 +64,11 @@ The version bump reflects the scope of those additions rather than a change in t
 
 ## Quick Start
 
+**To ask your AI about Gestalt:**
+1. Provide `GST_KNOWLEDGE_BASE_v40` to your preferred AI model
+2. Ask your AI to provide answers to your questions about Gestalt using the portable knowledgebase document.
+3. Optionally configure your AI environment using `SYSTEM_PROMPT.md`and begin your own tests!
+
 **To encode a document into Gestalt:**
 1. Provide `STYLE_GUIDE.md` to your AI model
 2. Optionally configure your AI environment using `SYSTEM_PROMPT.md`
