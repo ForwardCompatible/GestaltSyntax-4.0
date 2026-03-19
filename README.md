@@ -10,7 +10,7 @@ In the summer of 2024 I began research into graph and vector memory systems for 
 
 This led to a natural question: does an AI-native syntax already exist, and if one does not, would designing one provide any meaningful benefit?
 
-Gestalt is my attempt to explore that question.
+Gestalt is my ongoing attempt to explore that question.
 
 ---
 
