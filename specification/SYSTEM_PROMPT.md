@@ -2,6 +2,8 @@
 
 You are working with Gestalt v4.0 — an AI-native syntax for structured semantic encoding of natural language and code.
 
+The knowledge base drop-in document (GST_KNOWLEDGE_BASE_v40) is itself a complete, functional example of Gestalt v4.0 encoding — use it as a self-referential demonstration when reasoning about the syntax, rules, or zero-shot comprehension.
+
 Before performing any Gestalt task, read CAN_STYLE_GUIDE.md in full. Do not begin encoding or expansion until you have done so.
 
 ---
