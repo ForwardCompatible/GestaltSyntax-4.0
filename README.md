@@ -4,49 +4,96 @@
 
 ---
 
-## Origin
-
-In the summer of 2024 I began research into graph and vector memory systems for AI. Through that research I noticed that explicitly declared relationships appeared to have a significant impact on an AI's ability to contextually absorb and reason over information — more so than the information itself.
-
-This led to a natural question: does an AI-native syntax already exist, and if one does not, would designing one provide any meaningful benefit?
-
-Gestalt is my ongoing attempt to explore that question.
-
----
-
 ## What Gestalt Is
 
-Gestalt is a transport format. It is a self-contained document that travels with the code or content and requires nothing to interpret beyond itself. Any AI model can read it directly.
+**Abstract Syntax Trees and Language Server Protocol implementations keep the structure and sacrifice the meaning. Gestalt keeps the meaning and sacrifices some of the explicit structure.**
 
-It is worth being precise about what Gestalt is not. Abstract Syntax Trees and Language Server Protocol implementations are valuable, well-established tools — but they are runtime tools. They require an installed environment, a running parser, and language-specific tooling. They are not portable. You cannot hand someone an AST and have them reason over it without standing up the environment that produced it.
+Gestalt is a self-contained, portable encoding format designed specifically for AI consumption. It encodes the semantic intent of natural language and code along with the explicit relationships between ideas, functions, and concepts — producing a document that any AI model can ingest and reason over directly, without dependencies, without a running environment, and without prior exposure to the syntax.
 
-Comparing Gestalt to an AST or LSP is a bit like comparing a PDF to a compiler. They overlap in that both relate to documents or code, but they are solving different problems for different consumers. Gestalt was designed specifically to require no dependencies — nothing to install, nothing to run, nothing to configure.
-
-With that intent, Gestalt is designed to:
-
-- Preserve semantic meaning and intent through structured encoding
-- Enhance an AI's ability to understand and reason over complex documents and codebases
-- Provide graph-level relational understanding in a portable, self-contained format
-- Achieve zero-shot comprehension across AI models without prior syntax training
-
-That last point deserves a note: no AI model has been exposed to Gestalt during training. Zero-shot comprehension is an observed result, not an assumption. Encoding tasks will likely require the style guide due to the novel nature of the syntax — but reading and reasoning over Gestalt encoded documents appears to require no prior exposure at all.
-
-Whether Gestalt delivers on any of these intentions in practice is the subject of ongoing testing. This repository documents what has been found so far.
+For a complete explanation of what Gestalt is, how it differs from existing tools, and the research questions it was designed to explore, see [`NLP_knowledgebase.md`](NLP_knowledgebase.md). To ask an AI model questions about Gestalt directly, provide [`GST_knowledgebase.md`](GST_knowledgebase.md) — no configuration required.
 
 ---
 
-## Version 4.0
+## How It Works
 
-A v3.2 specification was previously published and has been deprecated. The v3.2 specification was incomplete — a key design document governing code fidelity management had inadvertently been omitted from the published work, leaving the encoding and expansion rules for code underspecified and incomplete.
+Gestalt uses three Unicode delimiters to structure content into typed, identified, metadata-tagged blocks with explicitly declared relationships between them:
 
-Version 4.0 represents a complete and internally consistent specification covering both NLP and code domains, with explicit rules for:
+```
+FUNC☩calculate_tax☩params:amount:float,return:float☸
+multiplies amount by TAX_RATE, rounds to 2 decimal places☥
+RELATES☩TAX_RATE☩depends_on
+RELATES☩validate_input☩calls
+```
 
-- Encoding fidelity and expansion behavior
-- Corpus encoding for multi-file repositories
-- Ambiguity handling via the HOTSPOT reserved block type
-- Verbatim preservation of comments and editorial notes via the ANNOTATION reserved block type
+Every block carries its semantic content, its classification, its metadata context, and its declared relationships to other blocks. Nothing is left to inference.
 
-The version bump reflects the scope of those additions rather than a change in the core syntax design.
+The complete encoding and expansion reference is in [`STYLE_GUIDE.md`](STYLE_GUIDE.md).
+
+---
+
+## Why It Exists Relative to Other Tools
+
+Gestalt is not a replacement for AST, LSP, RAG, or vector stores. Those are well-established tools solving different problems for different consumers. Gestalt occupies a position none of them fill: a portable, self-contained semantic document designed specifically for an AI model as the primary consumer.
+
+- **AST and LSP** are runtime tools. They require an installed environment and serve compilers and language servers. They are structurally precise and semantically empty.
+- **RAG and vector stores** retrieve context at inference time and hand the model raw material to reason over. Relevance is established on the fly.
+- **Gestalt** encodes semantic meaning and explicit relationships at encoding time. The model consuming it does not have to establish relevance or interpret structure — that work is already done.
+
+---
+
+## Token Efficiency
+
+Token efficiency is an observed property of Gestalt encoding, not its primary purpose.
+
+Every Gestalt document carries a fixed framework overhead of approximately 170 tokens. Below that threshold, a Gestalt encoded document may be larger than its source. Above it, efficiency scales nonlinearly with document length and the structural and repetitive density of the source content.
+
+The knowledge base documents in this repository provide a verifiable comparison. [`NLP_knowledgebase.md`](NLP_knowledgebase.md) is 612 lines. [`GST_knowledgebase.md`](GST_knowledgebase.md) is 494 lines. Both contain identical content across eight sections. The difference is attributable entirely to the encoding.
+
+The more meaningful distinction is what might be called **context density** — a working term developed during the research behind Gestalt, for which no existing industry standard was found. It may be superseded by a more precise term as the field develops. Context density refers to the degree to which a unit of encoded information carries not only its semantic content but also the explicit relational and interpretive context necessary to use that information without additional reasoning overhead. A RELATES declaration doesn't just connect two blocks — it answers the question of why that connection exists and makes that answer available to the model at the moment the information arrives.
+
+---
+
+## Zero-Shot Comprehension
+
+No AI model has been exposed to Gestalt during training. Zero-shot comprehension — the ability to read and reason over a Gestalt encoded document without prior exposure or a syntax guide — is an observed result across all tested models above approximately one billion parameters.
+
+Encoding tasks will likely require the style guide. Reading and reasoning over Gestalt encoded documents appears to require no prior exposure at all. Whether this property holds universally and what its boundaries are is an active area of investigation.
+
+---
+
+## Testing and Findings
+
+All testing is conducted against the v4.0 specification. Results from prior versions are not cited — the v3.2 specification was incomplete in ways that make those results unreliable as a baseline.
+
+Current testing in progress:
+
+- **QuALITY benchmark** — comparing model response quality on raw NLP input versus the same content encoded in Gestalt, identical questions against both
+- **Code complexity and expansion fidelity** — Lizard baseline metrics on a source file, Gestalt encoding, cold session expansion by a different model, functional verification and metric comparison
+- **Cross-language expansion** — encoding a Python program into Gestalt and expanding it into other languages in cold sessions
+- **Knowledge base token efficiency demonstration** — the paired NLP and GST knowledge base documents in this repository
+
+Active hypotheses under investigation include hallucination reduction, attention persistence across the forward pass, explicit relationships surfacing knowledge gaps, and the broader impact of Gestalt encoding on model reasoning quality. These are research questions, not findings. Full detail is in [`NLP_knowledgebase.md`](NLP_knowledgebase.md).
+
+Findings — positive, negative, or inconclusive — will be documented in `results/` as they become available. Community contributions and independent reproductions are welcome.
+
+---
+
+## Getting Started
+
+**To ask questions about Gestalt:**
+1. Provide [`GST_knowledgebase.md`](GST_knowledgebase.md) to your preferred AI model
+2. Ask questions directly — no configuration or syntax guide required
+
+**To encode a document into Gestalt:**
+1. Provide [`STYLE_GUIDE.md`](STYLE_GUIDE.md) to your AI model
+2. Optionally configure your environment using [`SYSTEM_PROMPT.md`](SYSTEM_PROMPT.md)
+3. Ask your AI to encode your document using Gestalt v4.0 syntax
+
+**To expand a Gestalt encoded document:**
+1. Provide the Gestalt encoded document to your AI model
+2. Ask your AI to expand it to the target language
+
+*Providing the style guide alongside the document is not required but may reduce initial perplexity, particularly on smaller models. The impact of style guide presence on expansion quality is an area of ongoing research.*
 
 ---
 
@@ -54,47 +101,14 @@ The version bump reflects the scope of those additions rather than a change in t
 
 | File | Purpose |
 |---|---|
-| `Gestalt_Spec_v40.md` | Canonical v4.0 human-readable specification. Start here. |
-| `STYLE_GUIDE.md` | Operational style guide for AI encoding and expansion tasks. |
+| `Gestalt_Spec_v40.md` | Canonical v4.0 specification. Human-readable reference. |
+| `STYLE_GUIDE.md` | Operational encoding and expansion reference for AI models. |
 | `SYSTEM_PROMPT.md` | Recommended system prompt for configuring an AI environment for Gestalt tasks. |
+| `NLP_knowledgebase.md` | Complete human-readable knowledge base. Start here for full context. |
+| `GST_knowledgebase.md` | Gestalt encoded knowledge base. AI-deployable. Drop into any model and ask questions. |
 | `tests/` | Test methodologies, source files, and encoded samples for community reproduction. |
 | `results/` | Test results as they become available. |
 
 ---
-
-## Quick Start
-
-**To ask your AI about Gestalt:**
-1. Provide `GST_KNOWLEDGE_BASE_v40` to your preferred AI model
-2. Ask your AI to provide answers to your questions about Gestalt using the portable knowledgebase document.
-3. Optionally configure your AI environment using `SYSTEM_PROMPT.md`and begin your own tests!
-
-**To encode a document into Gestalt:**
-1. Provide `STYLE_GUIDE.md` to your AI model
-2. Optionally configure your AI environment using `SYSTEM_PROMPT.md`
-3. Ask your AI to encode your document using Gestalt v4.0 syntax
-
-**To expand a Gestalt encoded document:**
-1. Provide `STYLE_GUIDE.md` to your AI model
-2. Provide the Gestalt encoded document
-3. Ask your AI to expand it to the target language
-
----
-
-## Planned Testing
-
-The following tests are currently planned or in progress:
-
-**NLP reasoning quality** — Using SQuAD to compare model reasoning accuracy on raw input versus Gestalt encoded input. Testing whether explicit relational structure improves comprehension and answer quality on the same questions.
-
-**Code complexity and expansion fidelity** — An intentionally complex single file program is used as the source. Lizard is run against the original to establish baseline complexity metrics. The file is then encoded into Gestalt and expanded back to the source language by a completely different model with no access to the original source. The expanded output is verified for functional correctness and Lizard metrics are run against it and compared to the baseline.
-
-Additional test areas are being designed. Community contributions are welcome — if you have run your own tests using Gestalt, or have suggestions for experiments worth pursuing, please open an issue or submit your results. All findings, positive or negative, are useful.
-
-**Note about GSM8k** — GSM8K tests deterministic numerical reasoning — problems with single correct answers that require no relationship traversal. This measures a different capability than what Gestalt is designed to support. Gestalt encodes explicit relationships between concepts and is better evaluated against a format where making these relationships explicit doesn't "pre-solve" the question. Due to this, SQuAD testing is planned as that appears to represent the more appropriate instrument.
-
----
-
-## License
 
 CC BY-NC 4.0 — Ryan Connelly. Commercial use requires a separate license agreement.
