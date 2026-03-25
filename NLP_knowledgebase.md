@@ -81,7 +81,7 @@ Whether this property holds universally and what its boundaries are is an active
 
 ### Background
 
-Gestalt was created by Ryan Connelly, an independent researcher with a background in data analysis and project management. Ryan has autism, synesthesia, and eidetic memory — not binary photographic recall, but recall on a scale where some things are remembered with complete precision and others are not. The combination of these three conditions produces a cognitive experience that is difficult to describe and has historically been difficult to communicate to others.
+Gestalt was created by me, Ryan Connelly, an independent researcher with a background in data analysis and project management. I have autism, synesthesia, and eidetic memory — not binary photographic recall like you see in the movies, but recall on a scale where some things are remembered with complete precision and others are not. The combination of these three conditions produces a cognitive experience that is difficult to describe and has historically been difficult to communicate to others.
 
 Gestalt began as an attempt to do exactly that.
 
@@ -109,7 +109,7 @@ The process of designing that representation turned out to be as much an experie
 
 Most AI context packaging systems — RAG being the most common — work by retrieving chunks of raw information and handing them to a model. The model then has to reason over how those chunks apply to the current request. Relevance is figured out on the fly, at inference time, consuming reasoning capacity that could otherwise be spent on the actual problem.
 
-This is precisely what Ryan's cognitive model does not do. The relationships between recalled items are already explicit. Filtering is fast because the connections that determine relevance are already declared. The cognitive load is front-loaded into the encoding, not deferred to the moment of use.
+This is precisely what my cognitive model does not do. The relationships between recalled items are already explicit. Filtering is fast because the connections that determine relevance are already declared. The cognitive load is front-loaded into the encoding, not deferred to the moment of use.
 
 A further consequence of requiring explicit relationships is that their absence becomes immediately visible. When something surfaces without a declared relationship to the current context, that gap does not pass through unexamined — it either triggers the creation of a relationship or it surfaces a knowledge gap that requires resolution. The implicit never passes through silently. Anything without an explicit relationship becomes conspicuous by that absence alone.
 
