@@ -101,8 +101,8 @@ Findings — positive, negative, or inconclusive — will be documented in `resu
 
 | File | Purpose |
 |---|---|
-| `NLP_knowledgebase.md` | Complete human-readable knowledge base. Start here for full context. |
-| `GST_knowledgebase.md` | Gestalt encoded knowledge base. AI-deployable. Drop into any model and ask questions. |
+| `NLP_KNOWLEDGE_BASE_v40.md` | Complete human-readable knowledge base. Start here for full context. |
+| `GST_KNOWLEDGE_BASE_v40.md` | Gestalt encoded knowledge base. AI-deployable. Drop into any model and ask questions. |
 | `specification/Gestalt_Spec_v40.md` | Canonical v4.0 specification. Human-readable reference. |
 | `specification/STYLE_GUIDE.md` | Operational encoding and expansion reference for AI models. |
 | `specification/SYSTEM_PROMPT.md` | Recommended system prompt for configuring an AI environment for Gestalt tasks. |
